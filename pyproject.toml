@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-plugin-afd"
 version = "0.1.1"
-description = "基于NoneBot2的爱发电订单审核进群插件"
+description = "基于 NoneBot2 的爱发电订单审核进群插件"
 authors = [{ name = "17TheWord", email = "17theword@gmail.com" }]
 requires-python = ">=3.10, <4"
 readme = "README.md"
@@ -10,6 +10,8 @@ dependencies = [
     "nonebot-adapter-onebot>=2.4.4,<3",
     "nonebot-adapter-afdian>=0.1.8,<0.2",
     "nonebot2[fastapi, httpx]>=2.3.3,<3",
+    "nonebot-plugin-localstore>=0.7.4",
+    "nonebot-plugin-alconna>=0.60.1",
 ]
 
 [dependency-groups]
@@ -51,51 +53,125 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
 addopts = "--cov=nonebot_plugin_afd --cov-report term-missing"
 
+[tool.basedpyright]
+pythonVersion = "3.10"
+defineConstant = { PYDANTIC_V2 = true }
+typeCheckingMode = "standard"
+reportShadowedImports = false
+exclude = ["**/node_modules", "**/.venv"]
+executionEnvironments = [
+    { root = "typings", reportIncompatibleMethodOverride = false, reportSelfClsParameterName = false },
+    { root = "." },
+]
+
 [tool.ruff]
-line-length = 88
 target-version = "py310"
 
-[tool.ruff.lint]
-select = [
-    "F",     # Pyflakes
-    "W",     # pycodestyle warnings
-    "E",     # pycodestyle errors
-    "I",     # isort
-    "UP",    # pyupgrade
-    "ASYNC", # flake8-async
-    "C4",    # flake8-comprehensions
-    "T10",   # flake8-debugger
-    "T20",   # flake8-print
-    "PYI",   # flake8-pyi
-    "PT",    # flake8-pytest-style
-    "Q",     # flake8-quotes
-    "RUF",   # Ruff-specific rules
-]
-ignore = [
-    "E402",
-    "E501",   # module-import-not-at-top-of-file
-    "UP037",  # quoted-annotation
-    "RUF001", # ambiguous-unicode-character-string
-    "RUF002", # ambiguous-unicode-character-docstring
-    "RUF003", # ambiguous-unicode-character-comment
-]
-
 [tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
+docstring-code-format = true
+line-ending = "lf"
 
-[tool.ruff.lint.pyupgrade]
-keep-runtime-typing = true
+[tool.ruff.lint]
+ignore = [
+    "B008",
+    "B905",
+    # "COM812",
+    "E501",
+    "F821",
+    "FBT001",
+    "FBT002",
+    "ISC001",
+    "PERF203",
+    "PGH003",
+    "PLC04",
+    "PLC2701",
+    "PLR09",
+    "PLR1702",
+    "PLR2004",
+    "PLR6301",
+    "PLW0603",
+    "PLW1641",
+    "PLW2901",
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    "RUF006",
+    "RUF029",
+    "RUF100",
+    "S101",
+    "S311",
+    "S404",
+    "SIM117",
+    "TC001",
+    "TRY002",
+    "TRY003",
+    "W505",
+]
+select = [
+    "A",
+    "ANN001",
+    "ARG",
+    "ASYNC",
+    "B",
+    "C4",
+    "COM",
+    "DTZ",
+    "E",
+    "F",
+    "FAST",
+    "FBT",
+    "FLY",
+    "FURB",
+    "I",
+    "INP",
+    "ISC",
+    "N",
+    "NPY",
+    "PD",
+    "PERF",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "Q",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "SLF",
+    "SLOT",
+    "TC",
+    "TRY",
+    "UP",
+    "W",
+    "YTT",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"private/misc/*" = ["B018", "INP001"]
+"typings/skia/*" = ["A002", "E743", "N8", "PLW0211", "PYI021", "PYI034"]
+"typings/thefuzz/*" = ["N802"]
 
 [tool.ruff.lint.isort]
-force-sort-within-sections = true
+combine-as-imports = true
+detect-same-package = true
 extra-standard-library = ["typing_extensions"]
+split-on-trailing-comma = true
 
-[tool.ruff.lint.flake8-pytest-style]
-fixture-parentheses = false
-mark-parentheses = false
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = true
+exempt-modules = [
+    "types",
+    "typing",
+    "typing_extensions",
+    "collections",
+    "pathlib",
+    "nonebot",
+    "nonebot_plugin_alconna",
+]
 
 [tool.data.packages]
 my_package = { path = "nonebot_plugin_afd" }

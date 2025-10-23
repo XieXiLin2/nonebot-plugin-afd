@@ -30,15 +30,15 @@ def get_description(author_id: str, event: OrderNotifyEvent) -> str:
     notice_text = (
         "[爱发电 | 订单通知]\n"
         f"{'=' * 15}\n"
-        f"作者：{author_id[:5]}{'*' * 5} 有新的订单\n"
+        f"作者: {author_id[:5]}{'*' * 5} 有新的订单\n"
         f"{'=' * 15}\n"
-        f"用户ID：{event.get_user_id()[:5]}{'*' * 5}\n"
-        f"订单号：{event.data.order.out_trade_no[:5]}{'*' * 5}\n"
+        f"用户ID: {event.get_user_id()[:5]}{'*' * 5}\n"
+        f"订单号: {event.data.order.out_trade_no[:5]}{'*' * 5}\n"
         f"发电 {event.data.order.month} 个月\n"
-        f"发电方案：{event.data.order.plan_title}\n"
+        f"发电方案: {event.data.order.plan_title}\n"
     )
     if sku_list := event.data.order.sku_detail:
-        sku_text = "\n购买内容："
+        sku_text = "\n购买内容:"
         for sku in sku_list:
             sku_text += f"\n\t{sku.name} * {sku.count}"
         notice_text += sku_text

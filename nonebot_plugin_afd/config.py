@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from nonebot import get_plugin_config
+import nonebot_plugin_localstore as store
 from pydantic import BaseModel, Field
 
 
@@ -9,3 +12,6 @@ class Config(BaseModel):
 
 
 plugin_config = get_plugin_config(Config)
+
+config_file: Path = store.get_plugin_config_file("group_config.json")
+user_relation_file: Path = store.get_plugin_data_file("user_relation.json")

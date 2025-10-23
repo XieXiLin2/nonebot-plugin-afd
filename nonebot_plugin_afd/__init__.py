@@ -1,4 +1,7 @@
+from nonebot import require
 from nonebot.plugin import PluginMetadata
+
+require("nonebot_plugin_localstore")
 
 from .config import Config
 
@@ -12,8 +15,11 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"nonebot.adapters.onebot.v11", "nonebot.adapters.afdian"},
 )
 
+from . import file_init as file_init  # noqa: I001
+
 from . import group_new_member as group_new_member
 from . import order_notice as order_notice
+from . import command as command
 
 # 初始化全局作者与群关系数据
 from .utils import init_global_data
