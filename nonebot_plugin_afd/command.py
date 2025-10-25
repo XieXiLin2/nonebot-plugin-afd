@@ -1,4 +1,5 @@
 import json
+from typing import Any
 from arclet.alconna import Alconna, Args, Arparma, CommandMeta
 from arclet.alconna.exceptions import SpecialOptionTriggered
 from nonebot import get_bot
@@ -164,12 +165,12 @@ async def _(matcher: AlconnaMatcher, event: GroupMessageEvent, parma: Arparma): 
     group_id = event.group_id
 
     # 读取时作为普通 dict（JSON 对象的键是字符串）
-    current_config: dict[str, GroupAfdConfig] = json.loads(
+    current_config: dict[str, dict[str, int | str | bool]] = json.loads(
         config_file.read_text(encoding="utf-8"),
     )
 
     key = str(group_id)  # 使用字符串键与 JSON 文件保持一致
-    current_group_config = current_config.get(key, GroupAfdConfig())
+    current_group_config = current_config.get(key, {})
     # 把从文件读出的 dict 转为 BaseModel 实例，保证后续验证与赋值正确
     if isinstance(current_group_config, dict):
         try:
@@ -196,7 +197,7 @@ async def _(matcher: AlconnaMatcher, event: GroupMessageEvent, parma: Arparma): 
         await matcher.finish(f"错误: 更新配置项失败: {e}")
 
     # 将更新后的模型转为可序列化的 dict，后续代码会把它写回 current_config
-    current_group_config = updated_model
+    current_group_config: dict[str, str | int | bool] = updated_model.model_dump()
     current_config[key] = current_group_config  # 使用字符串键写回
 
     config_file.write_text(
