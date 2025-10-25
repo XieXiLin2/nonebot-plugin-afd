@@ -1,4 +1,5 @@
 from nonebot.adapters.afdian import OrderNotifyEvent
+from nonebot.adapters.afdian.payload import Order
 
 from .config import plugin_config
 
@@ -26,18 +27,45 @@ def init_global_data():
             afdian_bot_id_to_group_ids[user_id].add(group_id)
 
 
-def get_description(author_id: str, event: OrderNotifyEvent) -> str:
+def get_description(
+    author_id: str,
+    event: OrderNotifyEvent,
+    text: str = "订单通知",
+) -> str:
     notice_text = (
-        "[爱发电 | 订单通知]\n"
+        f"[爱发电 | {text}]\n"
         f"{'=' * 15}\n"
         f"作者: {author_id[:5]}{'*' * 5} 有新的订单\n"
         f"{'=' * 15}\n"
-        f"用户ID: {event.get_user_id()[:5]}{'*' * 5}\n"
+        f"用户 ID: {event.get_user_id()[:5]}{'*' * 5}\n"
         f"订单号: {event.data.order.out_trade_no[:5]}{'*' * 5}\n"
         f"发电 {event.data.order.month} 个月\n"
         f"发电方案: {event.data.order.plan_title}\n"
     )
     if sku_list := event.data.order.sku_detail:
+        sku_text = "\n购买内容:"
+        for sku in sku_list:
+            sku_text += f"\n\t{sku.name} * {sku.count}"
+        notice_text += sku_text
+    return notice_text
+
+
+def get_description_from_response(
+    author_id: str,
+    event: Order,
+    text: str = "订单通知",
+) -> str:
+    notice_text = (
+        f"[爱发电 | {text}]\n"
+        f"{'=' * 15}\n"
+        f"作者: {author_id[:5]}{'*' * 5}\n"
+        f"{'=' * 15}\n"
+        f"用户 ID: {event.user_id}{'*' * 5}\n"
+        f"订单号: {event.out_trade_no[:5]}{'*' * 5}\n"
+        f"发电 {event.month} 个月\n"
+        f"发电方案: {event.plan_title}\n"
+    )
+    if sku_list := event.sku_detail:
         sku_text = "\n购买内容:"
         for sku in sku_list:
             sku_text += f"\n\t{sku.name} * {sku.count}"

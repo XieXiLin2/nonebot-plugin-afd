@@ -145,6 +145,8 @@ async def _(bot: Bot, event: GroupRequestEvent):
                     )
                 return
 
+        if not current_relations[event.user_id]:
+            current_relations[event.user_id] = []
         current_relations[event.user_id].append(order_response.data.list[0].user_id)
 
         user_relation_file.write_text(

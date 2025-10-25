@@ -1,5 +1,5 @@
 import json
-from typing import Any
+
 from arclet.alconna import Alconna, Args, Arparma, CommandMeta
 from arclet.alconna.exceptions import SpecialOptionTriggered
 from nonebot import get_bot
@@ -10,6 +10,7 @@ from nonebot.log import logger
 from nonebot_plugin_alconna import AlconnaMatcher, CommandResult, on_alconna
 
 from nonebot_plugin_afd.model import GroupAfdConfig
+from nonebot_plugin_afd.utils import get_description_from_response
 
 from .config import config_file, plugin_config, user_relation_file
 
@@ -280,5 +281,5 @@ async def _(matcher: AlconnaMatcher, parma: Arparma, event: GroupMessageEvent): 
             f"查询到用户 {event.user_id} 的订单信息: 订单号 {order.out_trade_no}, 爱发电用户 ID {order.user_id}, 金额 {order.total_amount} 分, 状态 {order.status}",
         )
         await matcher.finish(
-            f"查询成功:\n订单号: {order.out_trade_no}\n爱发电用户 ID: {order.user_id}\n金额: {order.total_amount} 分\n状态: {order.status}",
+            f"查询成功:\n\n{get_description_from_response(author_id=user_id, event=order)}",
         )
